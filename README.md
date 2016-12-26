@@ -37,4 +37,5 @@ const Demo = () => (
       Hello world
     </Title>
   </CSSVariables>
+)
 ```
