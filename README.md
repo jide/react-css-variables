@@ -24,7 +24,7 @@ This component leverages [styled-components](https://github.com/styled-component
 
 ## Usage
 
-```
+```jsx
 const Title = styled.h1`
   color: var(--color)
 `
