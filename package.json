@@ -1,0 +1,51 @@
+{
+  "name": "react-css-variables",
+  "version": "1.0.0",
+  "description": "react-css-variables React component",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "jsnext:main": "es/index.js",
+  "module": "es/index.js",
+  "files": [
+    "css",
+    "es",
+    "lib",
+    "umd"
+  ],
+  "scripts": {
+    "build": "nwb build-react-component",
+    "clean": "nwb clean-module && npm clean-demo",
+    "start": "nwb serve-react-demo",
+    "test": "nwb test-react",
+    "test:coverage": "nwb test-react --coverage",
+    "test:watch": "nwb test-react --server"
+  },
+  "dependencies": {
+    "lodash.isequal": "^4.4.0"
+  },
+  "peerDependencies": {
+    "react": "15.x",
+    "styled-components": "1.x"
+  },
+  "devDependencies": {
+    "enzyme": "^2.7.0",
+    "nwb": "0.13.x",
+    "react": "15.x",
+    "react-addons-test-utils": "^15.4.1",
+    "react-dom": "15.x",
+    "react-motion": "^0.4.7",
+    "styled-components": "1.x"
+  },
+  "author": "Julien De Luca",
+  "homepage": "https://github.com/jide/react-css-variables",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jide/react-css-variables.git"
+  },
+  "keywords": [
+    "react-component",
+    "styled-components",
+    "css",
+    "css-variables"
+  ]
+}
