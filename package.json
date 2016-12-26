@@ -1,7 +1,7 @@
 {
   "name": "react-css-variables",
   "version": "1.0.0",
-  "description": "react-css-variables React component",
+  "description": "A React component to set CSS variables",
   "license": "MIT",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",

@@ -18,6 +18,8 @@ npm install --save styled-components
 npm install --save react-css-variables
 ```
 
+A React component to set CSS variables.
+
 Until [this issue](https://github.com/facebook/react/issues/6411) is fixed, it is not possible to inject css variables in React through inline props.
 
 This component leverages [styled-components](https://github.com/styled-components/styled-components) to allow easy injection of css variables.
