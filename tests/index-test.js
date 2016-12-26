@@ -3,7 +3,33 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import styled from 'styled-components'
 
-import CSSVariables from 'src/'
+import CSSVariables, { getStyledArguments, getStyledComponent, getNonChildrenKeys } from 'src/'
+
+describe('getStyledArguments', () => {
+  it('returns the correct args if empty', () => {
+    expect(getStyledArguments([])).toEqual([[]])
+  })
+
+  it('returns the correct args if one prop', () => {
+    expect(getStyledArguments(['color'])).toEqual([['--color:', ';'], props => props[key]])
+  })
+
+  it('returns the correct args if 2 props', () => {
+    expect(getStyledArguments(['color', 'opacity'])).toEqual([['--color:', '; --opacity:', ';'], props => props[key], props => props[key]])
+  })
+})
+
+describe('getStyledComponent', () => {
+  it('returns a styled component', () => {
+    expect(getStyledComponent([''])).toEqual(styled.div(''))
+  })
+})
+
+describe('getNonChildrenKeys', () => {
+  it('returns non children keys', () => {
+    expect(getNonChildrenKeys({ color: '', children: '' })).toEqual(['color'])
+  })
+})
 
 describe('CSSVariables', () => {
   it('updates if children prop changes', () => {
@@ -11,19 +37,4 @@ describe('CSSVariables', () => {
     wrapper.setProps({ children: 'hello again' })
     expect(wrapper.contains('hello again')).toEqual(true)
   })
-
-  it('does not create a new component when props keys do not change', () => {
-    const wrapper = shallow(<CSSVariables one={ 1 }/>)
-    const component = wrapper.state('component')
-    wrapper.setProps({ one: 11 })
-    expect(wrapper.state('component')).toEqual(component)
-  })
-
-  // TODO: This test does not pass, probably because styled.div returns the same ?
-  // it('creates a new component when one of props keys changes', () => {
-  //   const wrapper = shallow(<CSSVariables one={ 1 }/>)
-  //   const component = wrapper.state('component')
-  //   wrapper.setProps({ two: 2 })
-  //   expect(wrapper.state('component')).toNotEqual(component)
-  // })
 })
