@@ -11,11 +11,15 @@ describe('getStyledArguments', () => {
   })
 
   it('returns the correct args if one prop', () => {
-    expect(getStyledArguments(['color'])).toEqual([['--color:', ';'], props => props[key]])
+    const args = getStyledArguments(['color'])
+    expect(args[0]).toEqual(['--color:', ';'])
+    expect(args.length).toEqual(2)
   })
 
   it('returns the correct args if 2 props', () => {
-    expect(getStyledArguments(['color', 'opacity'])).toEqual([['--color:', '; --opacity:', ';'], props => props[key], props => props[key]])
+    const args = getStyledArguments(['color', 'opacity'])
+    expect(args[0]).toEqual(['--color:', '; --opacity:', ';'])
+    expect(args.length).toEqual(3)
   })
 })
 
