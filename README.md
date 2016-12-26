@@ -5,13 +5,13 @@
 [![Coveralls][coveralls-badge]][coveralls]
 
 [build-badge]: https://img.shields.io/travis/jide/react-css-variables.git/master.png?style=flat-square
-[build]: https://travis-ci.org/jide/react-css-variables.git
+[build]: https://travis-ci.org/jide/react-css-variables
 
 [npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
 [npm]: https://www.npmjs.org/package/npm-package
 
-[coveralls-badge]: https://img.shields.io/coveralls/jide/react-css-variables.git/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/jide/react-css-variables.git
+[coveralls-badge]: https://img.shields.io/coveralls/jide/react-css-variables/master.png?style=flat-square
+[coveralls]: https://coveralls.io/github/jide/react-css-variables
 
 ```
 npm install --save styled-components
