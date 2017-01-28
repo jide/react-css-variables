@@ -1,61 +1,44 @@
-import React, { PureComponent } from 'react'
-import styled from 'styled-components'
-import isEqual from 'lodash.isequal'
+import React, { Component } from 'react'
+import shallowEqual from './shallowEqual'
+import omit from 'lodash.omit'
 
-export function getStyledArguments(keys) {
-  const last = keys.length - 1
-  const args = keys.reduce((acc, key, i) => {
-    switch (i) {
-      case 0:
-        acc[0].push(`--${key}:`)
-        if (last === 0) {
-          acc[0].push(';')
-        }
-        break
-      case last:
-        acc[0].push(`; --${key}:`)
-        acc[0].push(';')
-        break
-      default:
-        acc[0].push(`; --${key}:`)
-    }
-
-    acc.push(props => props[key])
-
-    return acc
-  }, [[]])
-
-  return args
+export function getNonChildren(props) {
+  return omit(props, 'children')
 }
 
-export function getStyledComponent(keys) {
-  return styled.div(...getStyledArguments(keys))
+export function getStyle(props) {
+  return Object.keys(props)
+    .filter(key => key !== 'children')
+    .map(key => `--${key}:${props[key]};`)
+    .join('')
 }
 
-export function getNonChildrenKeys(props) {
-  return Object.keys(props).filter(key => key !== 'children')
-}
-
-export default class CSSVariables extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      component: getStyledComponent(getNonChildrenKeys(props))
-    }
+export default class CSSVariables extends Component {
+  componentDidMount() {
+    const nonChildren = getNonChildren(this.props)
+    this.node.setAttribute('style', getStyle(nonChildren))
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextNonChildrenKeys = getNonChildrenKeys(nextProps)
+    const nonChildren = getNonChildren(this.props)
+    const nextNonChildren = getNonChildren(nextProps)
 
-    if (!isEqual(getNonChildrenKeys(this.props), nextNonChildrenKeys)) {
-      this.setState({
-        component: getStyledComponent(nextNonChildrenKeys)
-      })
+    if (!shallowEqual(nonChildren, nextNonChildren)) {
+      this.node.setAttribute('style', getStyle(nextNonChildren))
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !shallowEqual(this.props.children, nextProps.children)
+  }
+
+  handleRef = node => this.node = node
+
   render() {
-    return <this.state.component { ...this.props }/>
+    return (
+      <div ref={ this.handleRef }>
+        { this.props.children }
+      </div>
+    );
   }
 }
