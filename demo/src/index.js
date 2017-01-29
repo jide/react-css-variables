@@ -3,7 +3,7 @@ import {render} from 'react-dom'
 import styled from 'styled-components'
 import { Motion, spring } from 'react-motion' 
 
-import CSSVariables from '../../src'
+import Variables from '../../src'
 
 const Title = styled.h1`
   font-size: 3.5em
@@ -46,7 +46,7 @@ class Demo extends Component {
     return (
       <Motion defaultStyle={{ y: 0 }} style={{ y: spring(this.state.open ? 5 : 0) }}>
         { ({ y }) => (
-          <CSSVariables
+          <Variables
             color={ this.state.color }
             transform={ `translate3d(0, ${y}em, 0)` }
           >
@@ -59,7 +59,7 @@ class Demo extends Component {
               </SubTitle>
               <Button onClick={ this.handleClick }>Click me</Button>
             </div>
-          </CSSVariables>
+          </Variables>
         ) }
       </Motion>
     )

@@ -1,44 +1,26 @@
 import React, { Component } from 'react'
-import shallowEqual from './shallowEqual'
-import omit from 'lodash.omit'
+import { findDOMNode } from 'react-dom'
+import { shallowEqual, setStyle } from './utils'
 
-export function getNonChildren(props) {
-  return omit(props, 'children')
-}
-
-export function getStyle(props) {
-  return Object.keys(props)
-    .filter(key => key !== 'children')
-    .map(key => `--${key}:${props[key]};`)
-    .join('')
-}
-
-export default class CSSVariables extends Component {
+export default class Variables extends Component {
   componentDidMount() {
-    const nonChildren = getNonChildren(this.props)
-    this.node.setAttribute('style', getStyle(nonChildren))
+    this.node = findDOMNode(this)
+    setStyle(this.node, this.props)
   }
 
   componentWillReceiveProps(nextProps) {
-    const nonChildren = getNonChildren(this.props)
-    const nextNonChildren = getNonChildren(nextProps)
-
-    if (!shallowEqual(nonChildren, nextNonChildren)) {
-      this.node.setAttribute('style', getStyle(nextNonChildren))
-    }
+    setStyle(this.node, this.props, nextProps)
   }
 
   shouldComponentUpdate(nextProps) {
     return !shallowEqual(this.props.children, nextProps.children)
   }
 
-  handleRef = node => this.node = node
+  setVariables(variables) {
+    setStyle(this.node, this.props, { ...this.props, ...variables })
+  }
 
   render() {
-    return (
-      <div ref={ this.handleRef }>
-        { this.props.children }
-      </div>
-    );
+    return this.props.children
   }
 }
