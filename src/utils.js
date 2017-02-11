@@ -5,7 +5,7 @@ const hasOwn = Object.prototype.hasOwnProperty
 export function applyNodeStyle(node, styles) {
   const length = Object.keys(styles).length
 
-  if (!length) {
+  if (length === 0) {
     return
   }
   else if (length === 1) {
@@ -16,29 +16,22 @@ export function applyNodeStyle(node, styles) {
   }
 }
 
-export function getNonChildren(props) {
-  return omit(props, 'children')
-}
-
 export function getStyles(props) {
-  return Object.keys(props)
-    .filter(key => key !== 'children')
-    .map(key => ({ key: `--${key}`, value: `${props[key]};` }))
+  return Object.keys(props).map(key => ({ key: `--${key}`, value: `${props[key]};` }))
 }
 
-export function setStyle(node, props, nextProps) {
-  const nonChildren = getNonChildren(props)
-
-  if (nextProps === undefined) {
-    applyNodeStyle(node, getStyles(nonChildren))
+export function setVariables(node, variables = {}) {
+  if (node) {
+    applyNodeStyle(node, getStyles(variables))
   }
-  else {
-    const nextNonChildren = getNonChildren(nextProps)
+}
 
-    if (!shallowEqual(nonChildren, nextNonChildren)) {
-      applyNodeStyle(node, getStyles(nonChildren))
-    }
-  }
+export function getDisplayName(WrappedComponent) {
+  const name = WrappedComponent.displayName
+    || WrappedComponent.name
+    || 'Component'
+
+  return `Variables(${name})`
 }
 
 export function shallowEqual(a, b) {

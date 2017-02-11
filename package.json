@@ -21,7 +21,8 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
-    "lodash.omit": "^4.5.0"
+    "lodash.omit": "^4.5.0",
+    "lodash.pick": "^4.4.0"
   },
   "peerDependencies": {
     "react": "15.x"
@@ -31,8 +32,7 @@
     "nwb": "0.13.x",
     "react": "15.x",
     "react-addons-test-utils": "^15.4.1",
-    "react-dom": "15.x",
-    "react-motion": "^0.4.7"
+    "react-dom": "15.x"
   },
   "author": "Julien De Luca",
   "homepage": "https://github.com/jide/react-css-variables",

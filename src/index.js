@@ -1,26 +1,45 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
-import { shallowEqual, setStyle } from './utils'
+import pick from 'lodash.pick'
+import omit from 'lodash.omit'
+import { shallowEqual, setVariables, getDisplayName } from './utils'
 
-export default class Variables extends Component {
-  componentDidMount() {
-    this.node = findDOMNode(this)
-    setStyle(this.node, this.props)
-  }
+export default function(...varNames) {
+  return WrappedComponent => class extends Component {
+    displayName = getDisplayName(WrappedComponent)
 
-  componentWillReceiveProps(nextProps) {
-    setStyle(this.node, this.props, nextProps)
-  }
+    constructor(props) {
+      super(props)
 
-  shouldComponentUpdate(nextProps) {
-    return !shallowEqual(this.props.children, nextProps.children)
-  }
+      this.state = {
+        varProps: pick(props, ...varNames),
+        ownProps: omit(props, ...varNames)
+      }
+    }
 
-  setVariables(variables) {
-    setStyle(this.node, this.props, { ...this.props, ...variables })
-  }
+    componentDidMount() {
+      setVariables(findDOMNode(this), this.state.ownProps)
+    }
 
-  render() {
-    return this.props.children
+    componentWillReceiveProps(nextProps) {
+      const prevVarProps = this.state.varProps
+
+      this.setState({
+        varProps: pick(nextProps, ...varNames),
+        ownProps: omit(nextProps, ...varNames)
+      }, () => {
+        if (!shallowEqual(prevVarProps, this.state.varProps)) {
+          setVariables(findDOMNode(this), this.state.varProps)
+        }
+      })
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+      return !shallowEqual(this.state.ownProps, nextState.ownProps)
+    }
+
+    render() {
+      return <WrappedComponent { ...this.state.ownProps }/>
+    }
   }
 }
