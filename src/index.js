@@ -18,7 +18,7 @@ export default function(...varNames) {
     }
 
     componentDidMount() {
-      setVariables(findDOMNode(this), this.state.ownProps)
+      setVariables(findDOMNode(this), this.state.varProps)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -28,6 +28,7 @@ export default function(...varNames) {
         varProps: pick(nextProps, ...varNames),
         ownProps: omit(nextProps, ...varNames)
       }, () => {
+
         if (!shallowEqual(prevVarProps, this.state.varProps)) {
           setVariables(findDOMNode(this), this.state.varProps)
         }

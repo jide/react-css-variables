@@ -14,5 +14,8 @@ module.exports = {
     compat: {
       enzyme: true
     }
+  },
+  karma: {
+    browsers: ['Chrome']
   }
 }

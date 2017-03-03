@@ -17,7 +17,7 @@ export function applyNodeStyle(node, styles) {
 }
 
 export function getStyles(props) {
-  return Object.keys(props).map(key => ({ key: `--${key}`, value: `${props[key]};` }))
+  return Object.keys(props).map(key => ({ key: `--${key}`, value: props[key] }))
 }
 
 export function setVariables(node, variables = {}) {
