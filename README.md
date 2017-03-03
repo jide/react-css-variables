@@ -9,7 +9,7 @@
 npm install --save react-css-variables
 ```
 
-# A React HOC for CSS variables
+## A React HOC for CSS variables
 
 Provides a HOC to create a component with props mapped to CSS variables. It allows to update CSS of underlying components without any DOM operation.
 
