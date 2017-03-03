@@ -13,7 +13,7 @@ npm install --save react-css-variables
 
 Provides a HOC to create a component with props mapped to CSS variables. It allows to update CSS of underlying components without any DOM operation.
 
-The HOC won't trigger a render if only one of the variables is changed. This can be a huge performance improvement if you have a component with a deep VDOM tree, since instead of passing props in elements as inline styles, you can only set variables no render will be triggered.
+The HOC won't trigger a render if only one of the variables is changed. This can be a huge performance improvement if you have a component with a deep render tree, since instead of passing props in elements as inline styles, you can only set variables no render will be triggered.
 
 ## Usage
 
