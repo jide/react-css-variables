@@ -1,44 +1,96 @@
 import expect from 'expect'
 import React from 'react'
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
 import styled from 'styled-components'
 
-import CSSVariables, { getStyledArguments, getStyledComponent, getNonChildrenKeys } from 'src/'
+import variables from 'src/'
 
-describe('getStyledArguments', () => {
-  it('returns the correct args if empty', () => {
-    expect(getStyledArguments([])).toEqual([[]])
-  })
-
-  it('returns the correct args if one prop', () => {
-    const args = getStyledArguments(['color'])
-    expect(args[0]).toEqual(['--color:', ';'])
-    expect(args.length).toEqual(2)
-  })
-
-  it('returns the correct args if 2 props', () => {
-    const args = getStyledArguments(['color', 'opacity'])
-    expect(args[0]).toEqual(['--color:', '; --opacity:', ';'])
-    expect(args.length).toEqual(3)
-  })
-})
-
-describe('getStyledComponent', () => {
-  it('returns a styled component', () => {
-    expect(getStyledComponent([''])).toEqual(styled.div(''))
-  })
-})
-
-describe('getNonChildrenKeys', () => {
-  it('returns non children keys', () => {
-    expect(getNonChildrenKeys({ color: '', children: '' })).toEqual(['color'])
-  })
-})
+const Rect = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: red;
+  left: calc(var(--x, 0) * 1px);
+  top: calc(var(--y, 0) * 1px);
+`
 
 describe('CSSVariables', () => {
-  it('updates if children prop changes', () => {
-    const wrapper = shallow(<CSSVariables>hello</CSSVariables>)
-    wrapper.setProps({ children: 'hello again' })
-    expect(wrapper.contains('hello again')).toEqual(true)
+  let root
+
+  beforeEach(() => {
+    root = document.createElement('div')
+    document.body.appendChild(root)
+  })
+
+  afterEach(() => {
+    document.body.removeChild(root)
+  })
+
+  it('correctly sets initial variable', () => {
+    const Demo = variables('x')(Rect)
+    const wrapper = mount(
+      <Demo x={ 30 }/>, { attachTo: root }
+    )
+
+    const node = wrapper.getDOMNode()
+
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('30px')
+  })
+
+  it('correctly sets multiple initial variables', () => {
+    const Demo = variables('x', 'y')(Rect)
+    const wrapper = mount(
+      <Demo x={ 30 } y={ 20 }/>, { attachTo: root }
+    )
+
+    const node = wrapper.getDOMNode()
+
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('30px')
+    expect(window.getComputedStyle(node).getPropertyValue('top')).toEqual('20px')
+  })
+
+  it('correctly updates single variable', () => {
+    const Demo = variables('x')(Rect)
+    const wrapper = mount(
+      <Demo/>, { attachTo: root }
+    )
+
+    const node = wrapper.getDOMNode()
+
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('0px')
+    wrapper.setProps({ x: 10 })
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('10px')
+    wrapper.setProps({ x: 30 })
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('30px')
+  })
+
+  it('correctly updates multiple variables', () => {
+    const Demo = variables('x', 'y')(Rect)
+    const wrapper = mount(
+      <Demo/>, { attachTo: root }
+    )
+
+    const node = wrapper.getDOMNode()
+
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('0px')
+    wrapper.setProps({ x: 10 })
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('10px')
+    wrapper.setProps({ y: 30 })
+    expect(window.getComputedStyle(node).getPropertyValue('top')).toEqual('30px')
+  })
+
+  it('correctly updates variable when setting style', () => {
+    const Demo = variables('x')(Rect)
+    const wrapper = mount(
+      <Demo/>, { attachTo: root }
+    )
+
+    const node = wrapper.getDOMNode()
+
+    wrapper.setProps({ style: { top: 20 } })
+    expect(window.getComputedStyle(node).getPropertyValue('top')).toEqual('20px')
+    wrapper.setProps({ x: 30 })
+    expect(window.getComputedStyle(node).getPropertyValue('top')).toEqual('20px')
+    expect(window.getComputedStyle(node).getPropertyValue('left')).toEqual('30px')
   })
 })

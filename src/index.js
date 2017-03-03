@@ -1,61 +1,46 @@
-import React, { PureComponent } from 'react'
-import styled from 'styled-components'
-import isEqual from 'lodash.isequal'
+import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
+import pick from 'lodash.pick'
+import omit from 'lodash.omit'
+import { shallowEqual, setVariables, getDisplayName } from './utils'
 
-export function getStyledArguments(keys) {
-  const last = keys.length - 1
-  const args = keys.reduce((acc, key, i) => {
-    switch (i) {
-      case 0:
-        acc[0].push(`--${key}:`)
-        if (last === 0) {
-          acc[0].push(';')
-        }
-        break
-      case last:
-        acc[0].push(`; --${key}:`)
-        acc[0].push(';')
-        break
-      default:
-        acc[0].push(`; --${key}:`)
+export default function(...varNames) {
+  return WrappedComponent => class extends Component {
+    displayName = getDisplayName(WrappedComponent)
+
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        varProps: pick(props, ...varNames),
+        ownProps: omit(props, ...varNames)
+      }
     }
 
-    acc.push(props => props[key])
-
-    return acc
-  }, [[]])
-
-  return args
-}
-
-export function getStyledComponent(keys) {
-  return styled.div(...getStyledArguments(keys))
-}
-
-export function getNonChildrenKeys(props) {
-  return Object.keys(props).filter(key => key !== 'children')
-}
-
-export default class CSSVariables extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      component: getStyledComponent(getNonChildrenKeys(props))
+    componentDidMount() {
+      setVariables(findDOMNode(this), this.state.varProps)
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    const nextNonChildrenKeys = getNonChildrenKeys(nextProps)
+    componentWillReceiveProps(nextProps) {
+      const prevVarProps = this.state.varProps
 
-    if (!isEqual(getNonChildrenKeys(this.props), nextNonChildrenKeys)) {
       this.setState({
-        component: getStyledComponent(nextNonChildrenKeys)
+        varProps: pick(nextProps, ...varNames),
+        ownProps: omit(nextProps, ...varNames)
+      }, () => {
+
+        if (!shallowEqual(prevVarProps, this.state.varProps)) {
+          setVariables(findDOMNode(this), this.state.varProps)
+        }
       })
     }
-  }
 
-  render() {
-    return <this.state.component { ...this.props }/>
+    shouldComponentUpdate(nextProps, nextState) {
+      return !shallowEqual(this.state.ownProps, nextState.ownProps)
+    }
+
+    render() {
+      return <WrappedComponent { ...this.state.ownProps }/>
+    }
   }
 }

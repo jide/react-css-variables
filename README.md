@@ -1,41 +1,39 @@
 # react-css-variables
 
-[![Travis][build-badge]][build]
 [![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
-
-[build-badge]: https://img.shields.io/travis/jide/react-css-variables.git/master.png?style=flat-square
-[build]: https://travis-ci.org/jide/react-css-variables
 
 [npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
 [npm]: https://www.npmjs.org/package/npm-package
 
-[coveralls-badge]: https://img.shields.io/coveralls/jide/react-css-variables/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/jide/react-css-variables
-
 ```
-npm install --save styled-components
 npm install --save react-css-variables
 ```
 
-A React component to set CSS variables.
+# A React HOC for CSS variables
 
-Until [this issue](https://github.com/facebook/react/issues/6411) is fixed, it is not possible to inject css variables in React through inline props.
+Provides a HOC to create a component with props mapped to CSS variables. It allows to update CSS of underlying components without any DOM operation.
 
-This component leverages [styled-components](https://github.com/styled-components/styled-components) to allow easy injection of css variables.
+The HOC won't trigger a render if only one of the variables is changed. This can be a huge performance improvement if you have a component with a deep VDOM tree, since instead of passing props in elements as inline styles, you can only set variables no render will be triggered.
 
 ## Usage
 
 ```jsx
+import styled from 'styled-components'
+import variables from 'react-css-variables'
+
+// We use styled-components, but it's totally up to you, as long as the css uses variables.
 const Title = styled.h1`
-  color: var(--color)
+  color: var(--color);
+  background: var(--background);
 `
 
+// Wrap our component with provided HOC.
+const VariablesTitle = variables('color', 'background')(Title)
+
+// Changing "color" or "background" will not trigger a render.
 const Demo = () => (
-  <CSSVariables color='red'>
-    <Title>
-      Hello world
-    </Title>
-  </CSSVariables>
+  <VariablesTitle color='red' background='blue'>
+    Hello world
+  </VariablesTitle>
 )
 ```

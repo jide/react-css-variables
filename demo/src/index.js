@@ -1,67 +1,76 @@
 import React, { Component } from 'react'
-import {render} from 'react-dom'
+import { render } from 'react-dom'
 import styled from 'styled-components'
-import { Motion, spring } from 'react-motion' 
 
-import CSSVariables from '../../src'
+import variables from '../../src'
 
-const Title = styled.h1`
-  font-size: 3.5em
-  text-align: center
-  transform: var(--transform)
-  color: var(--color, palevioletred)
+const Circle = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: blue;
+  border-radius: 50%;
+  left: calc(var(--x) * 1px);
+  top: calc(var(--y) * 1px);
 `
 
-const SubTitle = styled(Title)`
-  font-size: 1.5em
-`
+const VariablesCircle = variables('x', 'y')(Circle)
 
-const Button = styled.button`
-  font-size: 1.4em
-  background: none
-  margin: 1em
-  padding: 0.25em 1em
-  border-radius: 3px
-  outline: none
-  position: relative
-  z-index: 10
-  color: var(--color, palevioletred)
-  border: 2px solid var(--color, palevioletred)
-`
+const InlineCircle = (({ x, y }) => <Circle style={{ left: `${x}px`, top: `${y}px` }}/>)
 
 class Demo extends Component {
-  state = {
-    color: 'palevioletred',
-    open: false
+  state = { type: 'variables', x: 0, y: 0 }
+
+  componentDidMount() {
+    document.addEventListener('mousemove', this.handleMouseMove)
+  }
+  
+  componentWillUnmount() {
+    document.removeEventListener('mousemove', this.handleMouseMove)
   }
 
-  handleClick = () => {
+  handleMouseMove = event => {
     this.setState({
-      color: this.state.color === 'lightgray' ? 'palevioletred' : 'lightgray',
-      open: !this.state.open
+      x: event.screenX,
+      y: event.screenY,
+    })
+  }
+
+  handleChange = event => {
+    this.setState({
+      type: event.target.value
     })
   }
 
   render() {
+    const { x, y, type } = this.state
+    const Comp = type === 'variables' ? VariablesCircle : InlineCircle
+    const items = []
+    let yy = 0
+
+    for (let i = 0; i < 500; i++) {
+      const j = i % 25
+      const xx = j * 10
+
+      if (j === 0) {
+        yy += 10
+      }
+
+      items.push(<Comp key={ i } x={ x + xx } y={ y + yy }/>)
+    }
+
     return (
-      <Motion defaultStyle={{ y: 0 }} style={{ y: spring(this.state.open ? 5 : 0) }}>
-        { ({ y }) => (
-          <CSSVariables
-            color={ this.state.color }
-            transform={ `translate3d(0, ${y}em, 0)` }
-          >
-            <div>
-              <Title>
-                Hello world
-              </Title>
-              <SubTitle>
-                CSS Variables !
-              </SubTitle>
-              <Button onClick={ this.handleClick }>Click me</Button>
-            </div>
-          </CSSVariables>
-        ) }
-      </Motion>
+      <div>
+        <label>
+          <input type='radio' value='variables' checked={ type === 'variables' } onChange={ this.handleChange }/>
+          Use variables
+        </label>
+        <label>
+          <input type='radio' value='inline' checked={ type === 'inline' } onChange={ this.handleChange }/>
+          Use inline styles
+        </label>
+        { items }
+      </div>
     )
   }
 }

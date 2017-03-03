@@ -1,7 +1,7 @@
 {
   "name": "react-css-variables",
-  "version": "1.0.1",
-  "description": "A React component to set CSS variables",
+  "version": "2.0.0",
+  "description": "A React HOC for CSS variables",
   "license": "MIT",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
@@ -21,20 +21,19 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
-    "lodash.isequal": "^4.4.0"
+    "lodash.omit": "^4.5.0",
+    "lodash.pick": "^4.4.0"
   },
   "peerDependencies": {
-    "react": "15.x",
-    "styled-components": "1.x"
+    "react": "15.x"
   },
   "devDependencies": {
     "enzyme": "^2.7.0",
     "nwb": "0.13.x",
     "react": "15.x",
-    "react-addons-test-utils": "^15.4.1",
+    "react-addons-test-utils": "^15.4.2",
     "react-dom": "15.x",
-    "react-motion": "^0.4.7",
-    "styled-components": "1.x"
+    "styled-components": "^1.4.3"
   },
   "author": "Julien De Luca",
   "homepage": "https://github.com/jide/react-css-variables",
