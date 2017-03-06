@@ -1,9 +1,9 @@
 {
   "name": "react-css-variables",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A React HOC for CSS variables",
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "umd/react-css-variables.js",
   "jsnext:main": "es/index.js",
   "module": "es/index.js",
   "files": [
