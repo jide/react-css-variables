@@ -30,7 +30,7 @@ const Title = styled.h1`
 // Wrap our component with provided HOC.
 const VariablesTitle = variables('color', 'background')(Title)
 
-// Changing "color" or "background" will not trigger a render.
+// Changing "color" or "background" will not trigger a re-render.
 const Demo = () => (
   <VariablesTitle color='red' background='blue'>
     Hello world
